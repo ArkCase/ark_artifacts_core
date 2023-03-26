@@ -1,0 +1,42 @@
+#!/bin/bash
+set -euo pipefail
+
+say() {
+	echo -e "$(date -u -Isec): ${@}"
+}
+
+fail() {
+	say "${@}" 1>&2
+	exit ${EXIT_CODE:-1}
+}
+
+to_boolean() {
+	local RESULT="false"
+	case "${1,,}" in
+		true | t | yes | y | 1 | on | enable | enabled | active ) RESULT="true" ;;
+	esac
+	echo "${RESULT}"
+	return 0
+}
+
+[ -v BASE_DIR ] || BASE_DIR="/app"
+[ -v CONF_DIR ] || CONF_DIR="${BASE_DIR}/conf"
+
+#
+# Step one: extract the configurations
+#
+CONFIG_ZIP="${BASE_DIR}/.arkcase.zip"
+CONFIG_TGT="${CONF_DIR}/.arkcase"
+
+if [ -d "${CONFIG_TGT}" ] ; then
+	say "The configuration appears to already be deployed."
+	exit 0
+fi
+
+mkdir -p "${CONFIG_TGT}"
+cd "${CONFIG_TGT}"
+unzip "${CONFIG_ZIP}"
+
+#
+# TODO: Apply customizations and reconfigurations
+#
