@@ -5,7 +5,7 @@ set -euo pipefail
 [ -v CONF_DIR ] || CONF_DIR="${BASE_DIR}/conf"
 [ -v INIT_DIR ] || INIT_DIR="${BASE_DIR}/init"
 CONFIG_ZIP="${BASE_DIR}/.arkcase.zip"
-MARKER="${CONF_DIR}/.arkcase.initialization.complete"
+MARKER="${CONF_DIR}/acm/acm-config-server-repo/arkcase.yaml"
 EXTRACTION="$(mktemp -d -p "${CONF_DIR}")"
 COMPLETE="false"
 FILES=()
@@ -43,14 +43,16 @@ cleanup() {
 	rm -rf "${EXTRACTION}" &>/dev/null
 	if "${COMPLETE}" ; then
 		say "Initialization complete."
-		date -u -Ins &> "${MARKER}"
+		# date -u -Ins &> "${MARKER}"
 	else
 		say "Initialization was not complete. Cleaning out the extracted files"
+		# Make sure the marker file is gone
+		rm -rf "${MARKER}" || true
 		# Just in case ...
 		for f in "${FILES[@]}" ; do
 			f="${CONF_DIR}/${f}"
 			[ -e "${f}" ] || continue
-			rm -rf "${f}"
+			rm -rf "${f}" || true
 		done
 	fi
 }
