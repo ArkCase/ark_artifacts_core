@@ -115,6 +115,9 @@ RUN yum -y update && \
 
 COPY --chown="${APP_USER}:${APP_GROUP}" "entrypoint" "fixExcel" "/"
 
+RUN chown -R "${APP_USER}:${APP_GROUP}" "${CONF_DIR}" && \
+    chmod -R u=rwX,g=rX,o= "${CONF_DIR}"
+
 USER "${APP_USER}"
 WORKDIR "${CONF_DIR}"
 
