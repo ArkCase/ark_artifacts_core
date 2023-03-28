@@ -64,6 +64,7 @@ trap cleanup exit
 #
 
 if [ -e "${MARKER}" ] ; then
+	COMPLETE="true"
 	say "The configuration appears to already be deployed."
 	exit 0
 fi
@@ -77,6 +78,7 @@ unzip -d "${CONF_DIR}" "${CONFIG_ZIP}"
 # Apply customizations and reconfigurations
 #
 if [ ! -d "${INIT_DIR}" ] ; then
+	COMPLETE="true"
 	say "No initialization to perform, exiting"
 	exit 0
 fi
