@@ -33,12 +33,6 @@ ARG ARCH
 ARG OS
 ARG VER
 ARG CONFIG_SRC
-ARG APP_UID="1997"
-ARG APP_GID="${APP_UID}"
-ARG APP_USER="config"
-ARG APP_GROUP="${APP_USER}"
-ARG ACM_GID="10000"
-ARG ACM_GROUP="acm"
 ARG BASE_DIR="/app"
 ARG HOME_DIR="${BASE_DIR}/home"
 ARG CONF_DIR="${BASE_DIR}/conf"
@@ -52,11 +46,7 @@ LABEL ORG="ArkCase LLC" \
 #
 # Environment variables
 #
-ENV APP_UID="${APP_UID}" \
-    APP_GID="${APP_GID}" \
-    APP_USER="${APP_USER}" \
-    APP_GROUP="${APP_GROUP}" \
-    JAVA_HOME="/usr/lib/jvm/java" \
+ENV JAVA_HOME="/usr/lib/jvm/java" \
     LANG="en_US.UTF-8" \
     LANGUAGE="en_US:en" \
     LC_ALL="en_US.UTF-8" \
@@ -64,23 +54,6 @@ ENV APP_UID="${APP_UID}" \
     HOME_DIR="${HOME_DIR}" \
     CONF_DIR="${CONF_DIR}" \
     INIT_DIR="${INIT_DIR}"
-
-WORKDIR "${BASE_DIR}"
-
-#
-# Create the requisite user and group
-#
-RUN groupadd --system --gid "${ACM_GID}" "${ACM_GROUP}" && \
-    groupadd --system --gid "${APP_GID}" "${APP_GROUP}" && \
-    useradd  --system --uid "${APP_UID}" --gid "${APP_GROUP}" --groups "${ACM_GROUP}" --create-home --home-dir "${HOME_DIR}" "${APP_USER}"
-
-RUN rm -rf /tmp/* && \
-    chown -R "${APP_USER}:${APP_GROUP}" "${BASE_DIR}" && \
-    chmod -R "u=rwX,g=rX,o=" "${BASE_DIR}" 
-
-##################################################### ARKCASE: BELOW ###############################################################
-
-ARG VER
 
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
@@ -94,7 +67,7 @@ ENV PATH="${PATH}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
 #
 # TODO: This is done much more cleanly with Maven and its dependency retrieval mechanisms
 #
-ADD --chown="${APP_USER}:${APP_GROUP}" "${CONFIG_SRC}" "${BASE_DIR}/.arkcase.zip"
+ADD "${CONFIG_SRC}" "${BASE_DIR}/.arkcase.zip"
 
 #  \
 RUN yum -y update && \
@@ -109,17 +82,15 @@ RUN yum -y update && \
         zip \
     && \
     yum -y clean all && \
-    pip3 install openpyxl
+    pip3 install openpyxl && \
+    rm -rf /tmp/*
 
 ##################################################### ARKCASE: ABOVE ###############################################################
 
-COPY --chown="${APP_USER}:${APP_GROUP}" "entrypoint" "fixExcel" "/"
+COPY "entrypoint" "fixExcel" "/"
 
-RUN mkdir -p "${CONF_DIR}" && \
-    chown -R "${APP_USER}:${APP_GROUP}" "${CONF_DIR}" && \
-    chmod -R u=rwX,g=rX,o= "${CONF_DIR}"
+RUN mkdir -p "${CONF_DIR}" "${INIT_DIR}"
 
-USER "${APP_USER}"
 WORKDIR "${CONF_DIR}"
 
 # These may have to disappear in openshift
