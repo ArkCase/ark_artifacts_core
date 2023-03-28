@@ -103,15 +103,17 @@ RUN yum -y update && \
     yum -y install \
         java-11-openjdk-devel \
         openssl \
+        python3-pip \
         unzip \
         wget \
         zip \
     && \
-    yum -y clean all
+    yum -y clean all && \
+    pip3 install openpyxl
 
 ##################################################### ARKCASE: ABOVE ###############################################################
 
-ADD --chown="${APP_USER}:${APP_GROUP}" "entrypoint" "/entrypoint"
+COPY --chown="${APP_USER}:${APP_GROUP}" "entrypoint" "fixExcel" "/"
 
 USER "${APP_USER}"
 WORKDIR "${CONF_DIR}"
