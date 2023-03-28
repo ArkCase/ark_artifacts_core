@@ -41,8 +41,8 @@ ARG ACM_GID="10000"
 ARG ACM_GROUP="acm"
 ARG BASE_DIR="/app"
 ARG HOME_DIR="${BASE_DIR}/home"
-ARG CONF_DIR="${HOME_DIR}/conf"
-ARG INIT_DIR="${HOME_DIR}/init"
+ARG CONF_DIR="${BASE_DIR}/conf"
+ARG INIT_DIR="${BASE_DIR}/init"
 
 LABEL ORG="ArkCase LLC" \
       MAINTAINER="Armedia Devops Team <devops@armedia.com>" \
@@ -115,7 +115,8 @@ RUN yum -y update && \
 
 COPY --chown="${APP_USER}:${APP_GROUP}" "entrypoint" "fixExcel" "/"
 
-RUN chown -R "${APP_USER}:${APP_GROUP}" "${CONF_DIR}" && \
+RUN mkdir -p "${CONF_DIR}" && \
+    chown -R "${APP_USER}:${APP_GROUP}" "${CONF_DIR}" && \
     chmod -R u=rwX,g=rX,o= "${CONF_DIR}"
 
 USER "${APP_USER}"
