@@ -75,6 +75,38 @@ fi
 unzip -d "${CONF_DIR}" "${CONFIG_ZIP}"
 
 #
+# If REALM_FIX is set, we edit the excel files accordingly
+#
+
+if [ -v REALM_FIX ] && [[ "${REALM_FIX}" =~ ^[^=]+=[^=]+$ ]] ; then
+	# REALM_FIX is set as "OLD_VALUE,NEW_VALUE", and three versions are created:
+	# literal (i.e. as-stated), lowercased, and uppercased
+
+	readarray -t -d '=' FIXES < <(echo -n "${REALM_FIX}")
+
+	[ ${#FIXES[@]} -eq 2 ] || fail "The format for REALM_FIX is incorrect - must be 'OLD,NEW': [${REALM_FIX}]"
+
+	OLD="@${FIXES[0]}"
+	NEW="@${FIXES[1]}"
+
+	if [ "${OLD}" != "${NEW}" ] ; then
+		SUBS=("${OLD}" "${NEW}")
+		# If applicable, do the lowercased one
+		[ "${OLD,,}" != "${OLD}" ] && SUBS+=("${OLD,,}" "${NEW,,}")
+		# If applicable, do the uppercased one
+		[ "${OLD^^}" != "${OLD}" ] && SUBS+=("${OLD^^}" "${NEW^^}")
+
+		while read f ; do
+			/fixExcel "${f}" "${SUBS[@]}" || fail "Failed to apply the realm fix for [${f}]"
+		done < <(find "${CONF_DIR}" -type f -name '*.xlsx' | sort)
+	fi
+elif [ -v REALM_FIX ] ; then
+	fail "The format for REALM_FIX is incorrect - must be 'OLD=NEW': [${REALM_FIX}]"
+else
+	say "WARNING: No REALM_FIX found, will not modify the Excel files"
+fi
+
+#
 # Apply customizations and reconfigurations
 #
 if [ ! -d "${INIT_DIR}" ] ; then
