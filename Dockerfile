@@ -18,7 +18,7 @@
 #
 ARG ARCH="amd64"
 ARG OS="linux"
-ARG VER="2021.03.25"
+ARG VER="2021.03.26"
 ARG CONFIG_SRC="https://project.armedia.com/nexus/repository/arkcase/com/armedia/arkcase/arkcase-config-core/${VER}/arkcase-config-core-${VER}.zip"
 ARG BASE_REGISTRY
 ARG BASE_REPO="arkcase/base"
