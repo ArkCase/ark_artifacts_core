@@ -4,9 +4,10 @@ set -euo pipefail
 [ -v BASE_DIR ] || BASE_DIR="/app"
 [ -v CONF_DIR ] || CONF_DIR="${BASE_DIR}/conf"
 [ -v INIT_DIR ] || INIT_DIR="${BASE_DIR}/init"
-CONFIG_ZIP="${BASE_DIR}/.arkcase.zip"
-MARKER="${CONF_DIR}/acm/acm-config-server-repo/arkcase.yaml"
-EXTRACTION="$(mktemp -d -p "${CONF_DIR}")"
+[ -v CONFIG_ZIP ] || CONFIG_ZIP="${BASE_DIR}/.arkcase.zip"
+[ -v VERSION_MARKER ] || VERSION_MARKER="${CONF_DIR}/.version"
+[ -v EXTRACT_MARKER ] || EXTRACT_MARKER="${CONF_DIR}/acm/acm-config-server-repo/arkcase.yaml"
+EXTRACT_TARGET="$(mktemp -d -p "${CONF_DIR}")"
 COMPLETE="false"
 FILES=()
 
@@ -40,14 +41,13 @@ list_files() {
 }
 
 cleanup() {
-	rm -rf "${EXTRACTION}" &>/dev/null
+	rm -rf "${EXTRACT_TARGET}" &>/dev/null
 	if "${COMPLETE}" ; then
 		say "Initialization complete."
-		# date -u -Ins &> "${MARKER}"
 	else
 		say "Initialization was not complete. Cleaning out the extracted files"
 		# Make sure the marker file is gone
-		rm -rf "${MARKER}" || true
+		rm -rf "${VERSION_MARKER}" || true
 		# Just in case ...
 		for f in "${FILES[@]}" ; do
 			f="${CONF_DIR}/${f}"
@@ -63,16 +63,35 @@ trap cleanup exit
 # Step one: extract the configurations
 #
 
-if [ -e "${MARKER}" ] ; then
-	COMPLETE="true"
-	say "The configuration appears to already be deployed."
-	exit 0
+if [ -e "${EXTRACT_MARKER}" ] ; then
+	DATE=""
+	EXISTING=""
+	EXISTING_LOADED="false"
+	if [ -e "${VERSION_MARKER}" ] ; then
+		read DATE EXISTING REST < <(grep -v '^[[:space:]]*#' "${VERSION_MARKER}" | grep -v '^[[:space:]]*$' | tail -1)
+		EXISTING_LOADED="true"
+	fi
+	if [ -v VER ] ; then
+		if "${EXISTING_LOADED}" && [ "${EXISTING}" == "${VER}" ] ; then
+			COMPLETE="true"
+			say "The configuration appears to already be deployed (${VER})."
+			exit 0
+		fi
+		say "Version change detected: existing = [${EXISTING:-"<none>"}], incoming = [${VER}]"
+	else
+		say "WARNING: The VER environment variable must be present in order to detect upgrades"
+		say "The configuration appears to already be deployed (${EXISTING})."
+		exit 0
+	fi
+else
+	say "The configuration doesn't appear to be deployed, the marker path [${EXTRACT_MARKER}] is missing"
 fi
+
 
 [ -d "${CONF_DIR}" ] || fail "Failed to CD into the configuration mount point [${CONF_DIR}]"
 
 # It's OK to do this, as CONF_DIR is meant to be a volume in this container
-unzip -d "${CONF_DIR}" "${CONFIG_ZIP}"
+unzip -o -d "${CONF_DIR}" "${CONFIG_ZIP}"
 
 #
 # If REALM_FIX is set, we edit the excel files accordingly
@@ -130,13 +149,15 @@ done < <(list_files)
 say "Initialization scripts complete"
 
 say "Deploying the files to their final location"
-cd "${EXTRACTION}"
+cd "${EXTRACT_TARGET}"
 readarray -t FILES < <(list_files)
 # We do it like this so we can run cleanup later if we have to
 for f in "${FILES[@]}" ; do
 	mv -vf "${f}" "${CONF_DIR}"
 done
 
+[ -v VER ] || VER="(unspecified)"
+echo -e "$(date -u -Ins) ${VER}" &>> "${VERSION_MARKER}"
 say "Configuration Initialization Complete"
 COMPLETE="true"
 exit 0

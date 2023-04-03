@@ -53,7 +53,8 @@ ENV JAVA_HOME="/usr/lib/jvm/java" \
     BASE_DIR="${BASE_DIR}" \ 
     HOME_DIR="${HOME_DIR}" \
     CONF_DIR="${CONF_DIR}" \
-    INIT_DIR="${INIT_DIR}"
+    INIT_DIR="${INIT_DIR}" \
+    VER="${VER}"
 
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
