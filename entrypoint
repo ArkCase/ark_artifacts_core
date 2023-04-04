@@ -63,30 +63,41 @@ trap cleanup exit
 # Step one: extract the configurations
 #
 
+# Make a note of the incoming file's checksum
+if [ -f "${CONFIG_ZIP}.sum" ] ; then
+	SRC_SUM="$(cat "${CONFIG_ZIP}.sum")" || true
+fi
+
+if [[ ! "${SRC_SUM,,}" =~ ^[0-9a-f]{64}$ ]] ; then
+	say "Failed to find the cached checksum, or it's invalid. Computing it directly..."
+	read SRC_SUM REST < <(sha256sum "${CONFIG_ZIP}")
+fi
+
+# If we're not given a version number, use a substitute
+[ -v VER ] || VER="(unspecified)"
+
 if [ -e "${EXTRACT_MARKER}" ] ; then
 	DATE=""
 	EXISTING=""
 	EXISTING_LOADED="false"
+
 	if [ -e "${VERSION_MARKER}" ] ; then
-		read DATE EXISTING REST < <(grep -v '^[[:space:]]*#' "${VERSION_MARKER}" | grep -v '^[[:space:]]*$' | tail -1)
+		read DATE SUM EXISTING < <(grep -v '^[[:space:]]*#' "${VERSION_MARKER}" | grep -v '^[[:space:]]*$' | tail -1)
 		EXISTING_LOADED="true"
-	fi
-	if [ -v VER ] ; then
-		if "${EXISTING_LOADED}" && [ "${EXISTING}" == "${VER}" ] ; then
-			COMPLETE="true"
-			say "The configuration appears to already be deployed (${VER})."
-			exit 0
-		fi
-		say "Version change detected: existing = [${EXISTING:-"<none>"}], incoming = [${VER}]"
 	else
-		say "WARNING: The VER environment variable must be present in order to detect upgrades"
-		say "The configuration appears to already be deployed (${EXISTING})."
+		SUM="<none>"
+	fi
+
+	if "${EXISTING_LOADED}" && [ "${SRC_SUM}" == "${SUM}" ] ; then
+		COMPLETE="true"
+		say "The current configuration appears to already be deployed since ${DATE} (${VER})."
 		exit 0
 	fi
+
+	say "File content change detected through file checksum: existing:\n\tEXISTING: [${SUM}]\n\tINCOMING: [${SRC_SUM}]"
 else
 	say "The configuration doesn't appear to be deployed, the marker path [${EXTRACT_MARKER}] is missing"
 fi
-
 
 [ -d "${CONF_DIR}" ] || fail "Failed to CD into the configuration mount point [${CONF_DIR}]"
 
@@ -156,8 +167,7 @@ for f in "${FILES[@]}" ; do
 	mv -vf "${f}" "${CONF_DIR}"
 done
 
-[ -v VER ] || VER="(unspecified)"
-echo -e "$(date -u -Ins) ${VER}" &>> "${VERSION_MARKER}"
+echo -e "$(date -u -Ins) ${SRC_SUM} ${VER}" &>> "${VERSION_MARKER}"
 say "Configuration Initialization Complete"
 COMPLETE="true"
 exit 0

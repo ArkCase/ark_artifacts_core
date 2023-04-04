@@ -54,7 +54,8 @@ ENV JAVA_HOME="/usr/lib/jvm/java" \
     HOME_DIR="${HOME_DIR}" \
     CONF_DIR="${CONF_DIR}" \
     INIT_DIR="${INIT_DIR}" \
-    VER="${VER}"
+    VER="${VER}" \
+    ARCHIVE="${BASE_DIR}/.arkcase.zip"
 
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
@@ -68,7 +69,7 @@ ENV PATH="${PATH}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin"
 #
 # TODO: This is done much more cleanly with Maven and its dependency retrieval mechanisms
 #
-ADD "${CONFIG_SRC}" "${BASE_DIR}/.arkcase.zip"
+ADD "${CONFIG_SRC}" "${ARCHIVE}"
 
 #  \
 RUN yum -y update && \
@@ -84,7 +85,10 @@ RUN yum -y update && \
     && \
     yum -y clean all && \
     pip3 install openpyxl && \
-    rm -rf /tmp/*
+    rm -rf /tmp/* && \
+    sha256sum "${ARCHIVE}" | \
+        sed -e 's;\s.*$;;g' \
+        > "${ARCHIVE}.sum"
 
 ##################################################### ARKCASE: ABOVE ###############################################################
 
