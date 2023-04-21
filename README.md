@@ -1,6 +1,6 @@
-# ArkCase Configuration
-This Project produces ArkCase Configuration image
+# ArkCase Deployment
+This Project produces ArkCase Deployment image
 
 ## How to build:
 
-docker build -t ${BASE\_REGISTRY}/arkcase/config:latest .
+docker build -t ${BASE\_REGISTRY}/arkcase/deploy:latest .
