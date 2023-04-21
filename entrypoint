@@ -85,7 +85,7 @@ install_file() {
 }
 
 [ -v VER ] || VER="(unknown)"
-[ -z "${VER}" ] || VER="(unknown)"
+[ -n "${VER}" ] || VER="(unknown)"
 
 while read FILE ; do
 	F="${FILE##*/}"
