@@ -100,6 +100,6 @@ COPY "entrypoint" "/"
 COPY "fixExcel" "realm-fix" "/usr/local/bin/"
 RUN chmod -Rv a+rX "/entrypoint" "/usr/local/bin"
 
-WORKDIR "${APP_DIR}"
+WORKDIR "${BASE_DIR}"
 
 ENTRYPOINT [ "/entrypoint" ]
