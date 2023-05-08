@@ -3,4 +3,4 @@ This Project produces ArkCase Deployment image
 
 ## How to build:
 
-docker build -t ${BASE\_REGISTRY}/arkcase/deploy:latest .
+docker build -t public.ecr.aws/arkcase/deploy:latest .
