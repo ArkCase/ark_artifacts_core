@@ -13,7 +13,7 @@ ARG PUBLIC_REGISTRY="public.ecr.aws"
 ARG BASE_REPO="arkcase/deploy-base"
 ARG BASE_TAG="1.1.0"
 
-ARG VER="2021.03.27"
+ARG VER="2021.03.28"
 ARG CONF_BASE_VER="${VER}"
 ARG CONF_BASE_SRC="https://project.armedia.com/nexus/repository/arkcase/com/armedia/arkcase/arkcase-config-core/${CONF_BASE_VER}/arkcase-config-core-${CONF_BASE_VER}.zip"
 ARG CONF_PDFTRON_BIN_VER="${VER}"
