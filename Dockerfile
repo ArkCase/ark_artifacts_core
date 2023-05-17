@@ -13,13 +13,21 @@ ARG PUBLIC_REGISTRY="public.ecr.aws"
 ARG BASE_REPO="arkcase/deploy-base"
 ARG BASE_TAG="1.1.0"
 
-ARG VER="2021.03.28"
+ARG VER="2021.03.27"
+
+#
+# The main WAR and CONF artifacts
+#
 ARG CONF_BASE_VER="${VER}"
 ARG CONF_BASE_SRC="https://project.armedia.com/nexus/repository/arkcase/com/armedia/arkcase/arkcase-config-core/${CONF_BASE_VER}/arkcase-config-core-${CONF_BASE_VER}.zip"
-ARG CONF_PDFTRON_BIN_VER="${VER}"
-ARG CONF_PDFTRON_BIN_SRC="https://project.armedia.com/nexus/repository/arkcase.release/com/armedia/arkcase/arkcase-pdftron-bin/${CONF_PDFTRON_BIN_VER}/arkcase-pdftron-bin-${CONF_PDFTRON_BIN_VER}.zip"
 ARG WAR_BASE_VER="${VER}"
 ARG WAR_BASE_SRC="https://project.armedia.com/nexus/repository/arkcase/com/armedia/acm/acm-standard-applications/arkcase/${WAR_BASE_VER}/arkcase-${WAR_BASE_VER}.war"
+
+#
+# The PDFNet library and binaries
+#
+ARG CONF_PDFTRON_BIN_VER="9.3.0"
+ARG CONF_PDFTRON_BIN_SRC="https://project.armedia.com/nexus/repository/arkcase.release/com/armedia/arkcase/arkcase-pdftron-bin/${CONF_PDFTRON_BIN_VER}/arkcase-pdftron-bin-${CONF_PDFTRON_BIN_VER}.zip"
 
 FROM "${PUBLIC_REGISTRY}/${BASE_REPO}:${BASE_TAG}"
 
