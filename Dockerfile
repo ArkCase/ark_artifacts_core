@@ -13,7 +13,7 @@ ARG PUBLIC_REGISTRY="public.ecr.aws"
 ARG BASE_REPO="arkcase/deploy-base"
 ARG BASE_TAG="1.1.0"
 
-ARG VER="2021.03.28"
+ARG VER="2021.03.29"
 
 #
 # The main WAR and CONF artifacts
