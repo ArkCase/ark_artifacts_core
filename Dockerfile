@@ -62,7 +62,7 @@ RUN sha256sum "${CONF_BASE}" | \
     echo -n "${CONF_BASE_VER}" > "${CONF_BASE}.ver"
 
 #
-# Download and checksum the configuration file
+# Download and checksum the PDFTron Binaries file
 #
 ADD "${CONF_PDFTRON_BIN_SRC}" "${CONF_PDFTRON_BIN}"
 RUN sha256sum "${CONF_PDFTRON_BIN}" | \
