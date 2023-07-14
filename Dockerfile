@@ -35,6 +35,9 @@ ARG PDFTRON_SRC="https://project.armedia.com/nexus/repository/arkcase.release/co
 
 FROM "${PUBLIC_REGISTRY}/${BASE_REPO}:${BASE_TAG}"
 
+ARG VER
+ARG BLD
+
 #
 # Basic Parameters
 #
@@ -49,7 +52,7 @@ ARG ARKCASE_TGT="${FILE_DIR}/wars/arkcase.war"
 LABEL ORG="ArkCase LLC" \
       MAINTAINER="Armedia Devops Team <devops@armedia.com>" \
       APP="ArkCase Deployer" \
-      VERSION="${VER}"
+      VERSION="${VER}-${BLD}"
 
 #
 # The contents of .arkcase
