@@ -41,13 +41,6 @@ ARG BLD
 #
 # Basic Parameters
 #
-ARG CONF_SRC
-ARG PDFTRON_SRC
-ARG ARKCASE_SRC
-
-ARG CONF_TGT="${FILE_DIR}/conf/00-base.zip"
-ARG PDFTRON_TGT="${FILE_DIR}/conf/00-pdftron.zip"
-ARG ARKCASE_TGT="${FILE_DIR}/wars/arkcase.war"
 
 LABEL ORG="ArkCase LLC" \
       MAINTAINER="Armedia Devops Team <devops@armedia.com>" \
@@ -55,16 +48,22 @@ LABEL ORG="ArkCase LLC" \
       VERSION="${VER}-${BLD}"
 
 #
+# The ArkCase WAR file
+#
+ARG ARKCASE_SRC
+ENV ARKCASE_TGT="${WARS_DIR}/arkcase.war"
+RUN pull-artifact "${ARKCASE_SRC}" "${ARKCASE_TGT}"
+
+#
 # The contents of .arkcase
 #
+ARG CONF_SRC
+ENV CONF_TGT="${CONF_DIR}/00-base.zip"
 RUN pull-artifact "${CONF_SRC}" "${CONF_TGT}"
 
 #
 # PDFTron stuff for .arkcase
 #
+ARG PDFTRON_SRC
+ENV PDFTRON_TGT="${CONF_DIR}/00-pdftron.zip"
 RUN pull-artifact "${PDFTRON_SRC}" "${PDFTRON_TGT}"
-
-#
-# The ArkCase WAR file
-#
-RUN pull-artifact "${ARKCASE_SRC}" "${ARKCASE_TGT}"
