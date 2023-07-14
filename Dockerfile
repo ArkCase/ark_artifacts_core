@@ -11,40 +11,40 @@
 #
 ARG PUBLIC_REGISTRY="public.ecr.aws"
 ARG BASE_REPO="arkcase/deploy-base"
-ARG BASE_TAG="1.1.0"
+ARG BASE_VER="1.2.0"
+ARG BASE_BLD="01"
+ARG BASE_TAG="${BASE_VER}-${BASE_BLD}"
 
-ARG VER="2021.03.33"
+ARG EXT="core"
+ARG VER="2021.03.34"
+ARG BLD="01"
 
 #
 # The main WAR and CONF artifacts
 #
-ARG CONF_BASE_VER="${VER}"
-ARG CONF_BASE_SRC="https://project.armedia.com/nexus/repository/arkcase/com/armedia/arkcase/arkcase-config-core/${CONF_BASE_VER}/arkcase-config-core-${CONF_BASE_VER}.zip"
-ARG WAR_BASE_VER="${VER}"
-ARG WAR_BASE_SRC="https://project.armedia.com/nexus/repository/arkcase/com/armedia/acm/acm-standard-applications/arkcase/${WAR_BASE_VER}/arkcase-${WAR_BASE_VER}.war"
+ARG CONF_VER="${VER}"
+ARG CONF_SRC="https://project.armedia.com/nexus/repository/arkcase/com/armedia/arkcase/arkcase-config-${EXT}/${CONF_VER}/arkcase-config-${EXT}-${CONF_VER}.zip"
+ARG ARKCASE_VER="${VER}"
+ARG ARKCASE_SRC="https://project.armedia.com/nexus/repository/arkcase/com/armedia/acm/acm-standard-applications/arkcase/${ARKCASE_VER}/arkcase-${ARKCASE_VER}.war"
 
 #
 # The PDFNet library and binaries
 #
-ARG CONF_PDFTRON_BIN_VER="9.3.0"
-ARG CONF_PDFTRON_BIN_SRC="https://project.armedia.com/nexus/repository/arkcase.release/com/armedia/arkcase/arkcase-pdftron-bin/${CONF_PDFTRON_BIN_VER}/arkcase-pdftron-bin-${CONF_PDFTRON_BIN_VER}.zip"
+ARG PDFTRON_VER="9.3.0"
+ARG PDFTRON_SRC="https://project.armedia.com/nexus/repository/arkcase.release/com/armedia/arkcase/arkcase-pdftron-bin/${PDFTRON_VER}/arkcase-pdftron-bin-${PDFTRON_VER}.zip"
 
 FROM "${PUBLIC_REGISTRY}/${BASE_REPO}:${BASE_TAG}"
 
 #
 # Basic Parameters
 #
-ARG VER
-ARG CONF_BASE_VER
-ARG CONF_BASE_SRC
-ARG CONF_PDFTRON_BIN_VER
-ARG CONF_PDFTRON_BIN_SRC
-ARG WAR_BASE_VER
-ARG WAR_BASE_SRC
+ARG CONF_SRC
+ARG PDFTRON_SRC
+ARG ARKCASE_SRC
 
-ARG CONF_BASE="${FILE_DIR}/conf/00-base.zip"
-ARG CONF_PDFTRON_BIN="${FILE_DIR}/conf/01-pdftron.zip"
-ARG WAR_BASE="${FILE_DIR}/war/00-war.zip"
+ARG CONF_TGT="${FILE_DIR}/conf/00-base.zip"
+ARG PDFTRON_TGT="${FILE_DIR}/conf/00-pdftron.zip"
+ARG ARKCASE_TGT="${FILE_DIR}/wars/arkcase.war"
 
 LABEL ORG="ArkCase LLC" \
       MAINTAINER="Armedia Devops Team <devops@armedia.com>" \
@@ -52,31 +52,16 @@ LABEL ORG="ArkCase LLC" \
       VERSION="${VER}"
 
 #
-# Download and checksum the configuration file
+# The contents of .arkcase
 #
-ADD "${CONF_BASE_SRC}" "${CONF_BASE}"
-RUN sha256sum "${CONF_BASE}" | \
-        sed -e 's;\s.*$;;g' | \
-        tr -d '\n' \
-        > "${CONF_BASE}.sum" && \
-    echo -n "${CONF_BASE_VER}" > "${CONF_BASE}.ver"
+RUN pull-artifact "${CONF_SRC}" "${CONF_TGT}"
 
 #
-# Download and checksum the PDFTron Binaries file
+# PDFTron stuff for .arkcase
 #
-ADD "${CONF_PDFTRON_BIN_SRC}" "${CONF_PDFTRON_BIN}"
-RUN sha256sum "${CONF_PDFTRON_BIN}" | \
-        sed -e 's;\s.*$;;g' | \
-        tr -d '\n' \
-        > "${CONF_PDFTRON_BIN}.sum" && \
-    echo -n "${CONF_PDFTRON_BIN_VER}" > "${CONF_PDFTRON_BIN}.ver"
+RUN pull-artifact "${PDFTRON_SRC}" "${PDFTRON_TGT}"
 
 #
-# Download and checksum the WAR file
+# The ArkCase WAR file
 #
-ADD "${WAR_BASE_SRC}" "${WAR_BASE}"
-RUN sha256sum "${WAR_BASE}" | \
-        sed -e 's;\s.*$;;g' | \
-        tr -d '\n' \
-        > "${WAR_BASE}.sum" && \
-    echo -n "${WAR_BASE_VER}" > "${WAR_BASE}.ver"
+RUN pull-artifact "${ARKCASE_SRC}" "${ARKCASE_TGT}"
