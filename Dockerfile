@@ -11,13 +11,13 @@
 #
 ARG PUBLIC_REGISTRY="public.ecr.aws"
 ARG BASE_REPO="arkcase/deploy-base"
-ARG BASE_VER="1.4.1"
+ARG BASE_VER="1.5.0"
 ARG BASE_BLD="01"
 ARG BASE_TAG="${BASE_VER}-${BASE_BLD}"
 
 ARG EXT="core"
 ARG VER="2021.03.34"
-ARG BLD="05"
+ARG BLD="06"
 
 #
 # The main WAR and CONF artifacts
@@ -37,6 +37,8 @@ FROM "${PUBLIC_REGISTRY}/${BASE_REPO}:${BASE_TAG}"
 
 ARG VER
 ARG BLD
+ENV VER
+ENV BLD
 
 #
 # Basic Parameters
