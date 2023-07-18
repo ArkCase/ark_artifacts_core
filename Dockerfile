@@ -37,8 +37,8 @@ FROM "${PUBLIC_REGISTRY}/${BASE_REPO}:${BASE_TAG}"
 
 ARG VER
 ARG BLD
-ENV VER
-ENV BLD
+ENV VER="${VER}"
+ENV BLD="${BLD}"
 
 #
 # Basic Parameters
