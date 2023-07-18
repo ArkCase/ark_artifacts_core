@@ -11,13 +11,13 @@
 #
 ARG PUBLIC_REGISTRY="public.ecr.aws"
 ARG BASE_REPO="arkcase/deploy-base"
-ARG BASE_VER="1.3.2"
+ARG BASE_VER="1.4.1"
 ARG BASE_BLD="01"
 ARG BASE_TAG="${BASE_VER}-${BASE_BLD}"
 
 ARG EXT="core"
 ARG VER="2021.03.34"
-ARG BLD="04"
+ARG BLD="05"
 
 #
 # The main WAR and CONF artifacts
@@ -52,7 +52,7 @@ LABEL ORG="ArkCase LLC" \
 #
 ARG ARKCASE_VER
 ARG ARKCASE_SRC
-ENV ARKCASE_TGT="${WARS_DIR}/arkcase.war"
+ENV ARKCASE_TGT="${FILES_WARS}/arkcase.war"
 RUN pull-artifact "${ARKCASE_SRC}" "${ARKCASE_TGT}" "${ARKCASE_VER}"
 
 #
@@ -60,7 +60,7 @@ RUN pull-artifact "${ARKCASE_SRC}" "${ARKCASE_TGT}" "${ARKCASE_VER}"
 #
 ARG CONF_VER
 ARG CONF_SRC
-ENV CONF_TGT="${CONF_DIR}/00-base.zip"
+ENV CONF_TGT="${FILES_CONF}/00-base.zip"
 RUN pull-artifact "${CONF_SRC}" "${CONF_TGT}" "${CONF_VER}"
 
 #
@@ -68,5 +68,5 @@ RUN pull-artifact "${CONF_SRC}" "${CONF_TGT}" "${CONF_VER}"
 #
 ARG PDFTRON_VER
 ARG PDFTRON_SRC
-ENV PDFTRON_TGT="${CONF_DIR}/00-pdftron.zip"
+ENV PDFTRON_TGT="${FILES_CONF}/00-pdftron.zip"
 RUN pull-artifact "${PDFTRON_SRC}" "${PDFTRON_TGT}" "${PDFTRON_VER}"
