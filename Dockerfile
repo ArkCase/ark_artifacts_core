@@ -62,7 +62,7 @@ RUN pull-artifact "${ARKCASE_SRC}" "${ARKCASE_TGT}" "${ARKCASE_VER}"
 #
 ARG CONF_VER
 ARG CONF_SRC
-ENV CONF_TGT="${FILES_CONF}/00-base.zip"
+ENV CONF_TGT="${FILES_CONF}/00-conf.zip"
 RUN pull-artifact "${CONF_SRC}" "${CONF_TGT}" "${CONF_VER}"
 
 #
