@@ -55,20 +55,20 @@ LABEL ORG="ArkCase LLC" \
 ARG ARKCASE_VER
 ARG ARKCASE_SRC
 ENV ARKCASE_TGT="${FILES_WARS}/arkcase.war"
-RUN pull-artifact "${ARKCASE_SRC}" "${ARKCASE_TGT}" "${ARKCASE_VER}"
+RUN prep-artifact "${ARKCASE_SRC}" "${ARKCASE_TGT}" "${ARKCASE_VER}"
 
 #
 # The contents of .arkcase
 #
 ARG CONF_VER
 ARG CONF_SRC
-ENV CONF_TGT="${FILES_CONF}/00-conf.zip"
-RUN pull-artifact "${CONF_SRC}" "${CONF_TGT}" "${CONF_VER}"
+ENV CONF_TGT="${FILES_CONF}/conf.zip"
+RUN prep-artifact "${CONF_SRC}" "${CONF_TGT}" "${CONF_VER}"
 
 #
 # PDFTron stuff for .arkcase
 #
 ARG PDFTRON_VER
 ARG PDFTRON_SRC
-ENV PDFTRON_TGT="${FILES_CONF}/00-pdftron.zip"
-RUN pull-artifact "${PDFTRON_SRC}" "${PDFTRON_TGT}" "${PDFTRON_VER}"
+ENV PDFTRON_TGT="${FILES_CONF}/pdftron.zip"
+RUN prep-artifact "${PDFTRON_SRC}" "${PDFTRON_TGT}" "${PDFTRON_VER}"
