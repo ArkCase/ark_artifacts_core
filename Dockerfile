@@ -2,7 +2,7 @@
 #
 # How to build:
 #
-# docker build -t arkcase/deploy:latest .
+# docker build -t arkcase/artifacts:latest .
 #
 ###########################################################################################################
 
@@ -10,8 +10,8 @@
 # Basic Parameters
 #
 ARG PUBLIC_REGISTRY="public.ecr.aws"
-ARG BASE_REPO="arkcase/deploy"
-ARG BASE_VER="2.0.5"
+ARG BASE_REPO="arkcase/artifacts"
+ARG BASE_VER="1.0.0"
 ARG BASE_BLD="01"
 ARG BASE_TAG="${BASE_VER}-${BASE_BLD}"
 
