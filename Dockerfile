@@ -17,7 +17,7 @@ ARG BASE_TAG="${BASE_VER}-${BASE_BLD}"
 
 ARG EXT="core"
 ARG VER="2023.01.01"
-ARG BLD="04"
+ARG BLD="01"
 
 #
 # The main WAR and CONF artifacts
