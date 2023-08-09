@@ -16,8 +16,8 @@ ARG BASE_BLD="01"
 ARG BASE_TAG="${BASE_VER}-${BASE_BLD}"
 
 ARG EXT="core"
-ARG VER="2023.01.01"
-ARG BLD="02"
+ARG VER="2023.01.02"
+ARG BLD="01"
 
 #
 # The main WAR and CONF artifacts
@@ -26,6 +26,8 @@ ARG CONF_VER="${VER}"
 ARG CONF_SRC="https://project.armedia.com/nexus/repository/arkcase/com/armedia/arkcase/arkcase-config-${EXT}/${CONF_VER}/arkcase-config-${EXT}-${CONF_VER}.zip"
 ARG ARKCASE_VER="${VER}"
 ARG ARKCASE_SRC="https://project.armedia.com/nexus/repository/arkcase/com/armedia/acm/acm-standard-applications/arkcase/${ARKCASE_VER}/arkcase-${ARKCASE_VER}.war"
+ARG NEO4J_VER="${VER}"
+ARG NEO4J_SRC="https://project.armedia.com/nexus/repository/arkcase/com/armedia/arkcase/neo4j-demo/${NEO4J_VER}/neo4j-demo-${NEO4J_VER}.zip"
 
 #
 # The PDFNet library and binaries
@@ -53,6 +55,8 @@ ENV ARKCASE_DIR="${FILE_DIR}/arkcase"
 ENV ARKCASE_CONF_DIR="${ARKCASE_DIR}/conf"
 ENV ARKCASE_WARS_DIR="${ARKCASE_DIR}/wars"
 
+ENV PENTAHO_DIR="${FILE_DIR}/pentaho"
+
 #
 # The ArkCase WAR file
 #
@@ -76,3 +80,11 @@ ARG PDFTRON_VER
 ARG PDFTRON_SRC
 ENV PDFTRON_TGT="${ARKCASE_CONF_DIR}/00-pdftron.zip"
 RUN prep-artifact "${PDFTRON_SRC}" "${PDFTRON_TGT}" "${PDFTRON_VER}"
+
+#
+# The Neo4J Demo Stuff
+#
+ARG NEO4J_VER
+ARG NEO4J_SRC
+ENV NEO4J_TGT="${PENTAHO_DIR}/analytical/neo4j-demo.zip"
+RUN prep-artifact "${NEO4J_SRC}" "${NEO4J_TGT}" "${NEO4J_VER}"
