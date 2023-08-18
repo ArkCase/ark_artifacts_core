@@ -11,13 +11,13 @@
 #
 ARG PUBLIC_REGISTRY="public.ecr.aws"
 ARG BASE_REPO="arkcase/artifacts"
-ARG BASE_VER="1.0.1"
+ARG BASE_VER="1.2.0"
 ARG BASE_BLD="01"
 ARG BASE_TAG="${BASE_VER}-${BASE_BLD}"
 
 ARG EXT="core"
 ARG VER="2023.01.03"
-ARG BLD="01"
+ARG BLD="02"
 
 #
 # The main WAR and CONF artifacts
