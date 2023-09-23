@@ -11,8 +11,8 @@
 #
 ARG PUBLIC_REGISTRY="public.ecr.aws"
 ARG BASE_REPO="arkcase/artifacts"
-ARG BASE_VER="1.3.0"
-ARG BASE_BLD="02"
+ARG BASE_VER="1.4.0"
+ARG BASE_BLD="01"
 ARG BASE_TAG="${BASE_VER}-${BASE_BLD}"
 
 ARG EXT="core"
@@ -20,18 +20,24 @@ ARG VER="2023.01.04"
 ARG BLD="03"
 
 #
-# The main WAR and CONF artifacts
+# The repo from which to pull everything
 #
-ARG CONF_VER="${VER}"
-ARG CONF_SRC="https://project.armedia.com/nexus/repository/arkcase/com/armedia/arkcase/arkcase-config-${EXT}/${CONF_VER}/arkcase-config-${EXT}-${CONF_VER}.zip"
+ARG ARKCASE_MVN_REPO="https://project.armedia.com/nexus/repository/arkcase/"
+
+#
+# ArkCase WAR and CONF files
+#
 ARG ARKCASE_VER="${VER}"
-ARG ARKCASE_SRC="https://project.armedia.com/nexus/repository/arkcase/com/armedia/acm/acm-standard-applications/arkcase/${ARKCASE_VER}/arkcase-${ARKCASE_VER}.war"
+ARG ARKCASE_SRC="com.armedia.acm.acm-standard-applications:arkcase:${ARKCASE_VER}:war"
+
+ARG CONF_VER="${VER}"
+ARG CONF_SRC="com.armedia.arkcase:arkcase-config-${EXT}:${CONF_VER}:zip"
 
 #
 # The PDFNet library and binaries
 #
 ARG PDFTRON_VER="9.3.0"
-ARG PDFTRON_SRC="https://project.armedia.com/nexus/repository/arkcase.release/com/armedia/arkcase/arkcase-pdftron-bin/${PDFTRON_VER}/arkcase-pdftron-bin-${PDFTRON_VER}.jar"
+ARG PDFTRON_SRC="com.armedia.arkcase:arkcase-pdftron-bin:${PDFTRON_VER}:jar"
 
 FROM "${PUBLIC_REGISTRY}/${BASE_REPO}:${BASE_TAG}"
 
@@ -56,25 +62,22 @@ ENV ARKCASE_WARS_DIR="${ARKCASE_DIR}/wars"
 ENV PENTAHO_DIR="${FILE_DIR}/pentaho"
 
 #
-# The ArkCase WAR file
+# Import the repo
 #
-ARG ARKCASE_VER
+ARG ARKCASE_MVN_REPO
+
+#
+# Pull all the artifacts
+#
 ARG ARKCASE_SRC
-ENV ARKCASE_TGT="${ARKCASE_WARS_DIR}/arkcase.war"
-RUN prep-artifact "${ARKCASE_SRC}" "${ARKCASE_TGT}" "${ARKCASE_VER}"
-
-#
-# The contents of .arkcase
-#
-ARG CONF_VER
 ARG CONF_SRC
-ENV CONF_TGT="${ARKCASE_CONF_DIR}/00-conf.zip"
-RUN prep-artifact "${CONF_SRC}" "${CONF_TGT}" "${CONF_VER}"
-
-#
-# PDFTron stuff for .arkcase
-#
-ARG PDFTRON_VER
 ARG PDFTRON_SRC
+
+ENV ARKCASE_TGT="${ARKCASE_WARS_DIR}/arkcase.war"
+ENV CONF_TGT="${ARKCASE_CONF_DIR}/00-conf.zip"
 ENV PDFTRON_TGT="${ARKCASE_CONF_DIR}/00-pdftron.zip"
-RUN prep-artifact "${PDFTRON_SRC}" "${PDFTRON_TGT}" "${PDFTRON_VER}"
+
+RUN mvn-get \
+        "${ARKCASE_SRC}@${ARKCASE_MVN_REPO}=${ARKCASE_TGT}" \
+        "${CONF_SRC}@${ARKCASE_MVN_REPO}=${CONF_TGT}" \
+        "${PDFTRON_SRC}@${ARKCASE_MVN_REPO}=${PDFTRON_TGT}"
