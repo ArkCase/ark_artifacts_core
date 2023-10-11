@@ -77,7 +77,6 @@ ENV ARKCASE_TGT="${ARKCASE_WARS_DIR}/arkcase.war"
 ENV CONF_TGT="${ARKCASE_CONF_DIR}/00-conf.zip"
 ENV PDFTRON_TGT="${ARKCASE_CONF_DIR}/00-pdftron.zip"
 
-RUN mvn-get \
-        "${ARKCASE_SRC}@${ARKCASE_MVN_REPO}=${ARKCASE_TGT}" \
-        "${CONF_SRC}@${ARKCASE_MVN_REPO}=${CONF_TGT}" \
-        "${PDFTRON_SRC}@${ARKCASE_MVN_REPO}=${PDFTRON_TGT}"
+RUN mvn-get "${ARKCASE_SRC}" "${ARKCASE_MVN_REPO}" "${ARKCASE_TGT}" && \
+    mvn-get "${CONF_SRC}"    "${ARKCASE_MVN_REPO}" "${CONF_TGT}"    && \
+    mvn-get "${PDFTRON_SRC}" "${ARKCASE_MVN_REPO}" "${PDFTRON_TGT}"
