@@ -60,8 +60,16 @@ ENV ARKCASE_CONF_DIR="${ARKCASE_DIR}/conf"
 ENV ARKCASE_WARS_DIR="${ARKCASE_DIR}/wars"
 
 ENV PENTAHO_DIR="${FILE_DIR}/pentaho"
-ENV PENTAHO_REPORTS_DIR="${PENTAHO_DIR}/reports"
 ENV PENTAHO_ANALYTICAL_DIR="${PENTAHO_DIR}/analytical"
+ENV PENTAHO_REPORTS_DIR="${PENTAHO_DIR}/reports"
+
+#
+# Make sure the base tree is created properly
+#
+RUN for n in \
+        "${ARKCASE_DIR}" "${ARKCASE_CONF_DIR}" "${ARKCASE_WARS_DIR}" \
+        "${PENTAHO_DIR}" "${PENTAHO_ANALYTICAL_DIR}" "${PENTAHO_REPORTS_DIR}" \
+    ; do mkdir -p "${n}" ; done
 
 #
 # TODO: Eventually add the Solr and Alfresco trees in here
