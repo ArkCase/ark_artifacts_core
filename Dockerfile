@@ -11,7 +11,6 @@
 #
 ARG EXT="core"
 ARG VER="2023.01.06"
-ARG BLD="01"
 
 #
 # Basic Parameters
@@ -19,9 +18,7 @@ ARG BLD="01"
 ARG PUBLIC_REGISTRY="public.ecr.aws"
 ARG BASE_REPO="arkcase/artifacts"
 ARG BASE_VER="1.4.0"
-ARG BASE_BLD="01"
-ARG BASE_TAG="${BASE_VER}-${BASE_BLD}"
-ARG BASE_IMAGE="${PUBLIC_REGISTRY}/${BASE_REPO}:${BASE_TAG}"
+ARG BASE_IMG="${PUBLIC_REGISTRY}/${BASE_REPO}:${BASE_VER}"
 
 #
 # The repo from which to pull everything
@@ -43,12 +40,10 @@ ARG CONF_SRC="com.armedia.arkcase:arkcase-config-${EXT}:${CONF_VER}:zip"
 ARG PDFTRON_VER="9.3.0"
 ARG PDFTRON_SRC="com.armedia.arkcase:arkcase-pdftron-bin:${PDFTRON_VER}:jar"
 
-FROM "${BASE_IMAGE}"
+FROM "${BASE_IMG}"
 
 ARG VER
-ARG BLD
 ENV VER="${VER}"
-ENV BLD="${BLD}"
 
 #
 # Basic Parameters
@@ -57,7 +52,7 @@ ENV BLD="${BLD}"
 LABEL ORG="ArkCase LLC" \
       MAINTAINER="Armedia Devops Team <devops@armedia.com>" \
       APP="ArkCase Deployer" \
-      VERSION="${VER}-${BLD}"
+      VERSION="${VER}"
 
 ENV ARKCASE_DIR="${FILE_DIR}/arkcase"
 ENV ARKCASE_CONF_DIR="${ARKCASE_DIR}/conf"
