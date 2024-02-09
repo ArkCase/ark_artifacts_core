@@ -10,14 +10,14 @@
 # Basic Definitions
 #
 ARG EXT="core"
-ARG VER="2023.01.06"
+ARG VER="2023.02.01"
 
 #
 # Basic Parameters
 #
 ARG PUBLIC_REGISTRY="public.ecr.aws"
 ARG BASE_REPO="arkcase/artifacts"
-ARG BASE_VER="1.4.0"
+ARG BASE_VER="1.4.1"
 ARG BASE_IMG="${PUBLIC_REGISTRY}/${BASE_REPO}:${BASE_VER}"
 
 #
