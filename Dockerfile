@@ -10,14 +10,14 @@
 # Basic Definitions
 #
 ARG EXT="core"
-ARG VER="2023.02.01"
+ARG VER="2023.02.02"
 
 #
 # Basic Parameters
 #
 ARG PUBLIC_REGISTRY="public.ecr.aws"
 ARG BASE_REPO="arkcase/artifacts"
-ARG BASE_VER="1.4.1"
+ARG BASE_VER="1.4.2"
 ARG BASE_IMG="${PUBLIC_REGISTRY}/${BASE_REPO}:${BASE_VER}"
 
 #
@@ -31,7 +31,7 @@ ARG ARKCASE_MVN_REPO="https://project.armedia.com/nexus/repository/arkcase/"
 ARG ARKCASE_VER="${VER}"
 ARG ARKCASE_SRC="com.armedia.acm.acm-standard-applications:arkcase:${ARKCASE_VER}:war"
 
-ARG CONF_VER="${VER}"
+ARG CONF_VER="${ARKCASE_VER}"
 ARG CONF_SRC="com.armedia.arkcase:arkcase-config-${EXT}:${CONF_VER}:zip"
 
 #
@@ -52,7 +52,7 @@ ENV VER="${VER}"
 LABEL ORG="ArkCase LLC" \
       MAINTAINER="Armedia Devops Team <devops@armedia.com>" \
       APP="ArkCase Deployer" \
-      VERSION="${VER}"
+      VERSION="${ARKCASE_VER}"
 
 ENV ARKCASE_DIR="${FILE_DIR}/arkcase"
 ENV ARKCASE_CONF_DIR="${ARKCASE_DIR}/conf"
