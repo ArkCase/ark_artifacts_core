@@ -28,10 +28,9 @@ ARG ARKCASE_MVN_REPO="https://project.armedia.com/nexus/repository/arkcase/"
 #
 # ArkCase WAR and CONF files
 #
-ARG ARKCASE_VER="${VER}"
-ARG ARKCASE_SRC="com.armedia.acm.acm-standard-applications:arkcase:${ARKCASE_VER}:war"
+ARG ARKCASE_SRC="com.armedia.acm.acm-standard-applications:arkcase:${VER}:war"
 
-ARG CONF_VER="${ARKCASE_VER}"
+ARG CONF_VER="${VER}"
 ARG CONF_SRC="com.armedia.arkcase:arkcase-config-${EXT}:${CONF_VER}:zip"
 
 #
@@ -52,7 +51,7 @@ ENV VER="${VER}"
 LABEL ORG="ArkCase LLC" \
       MAINTAINER="Armedia Devops Team <devops@armedia.com>" \
       APP="ArkCase Deployer" \
-      VERSION="${ARKCASE_VER}"
+      VERSION="${VER}"
 
 ENV ARKCASE_DIR="${FILE_DIR}/arkcase"
 ENV ARKCASE_CONF_DIR="${ARKCASE_DIR}/conf"
