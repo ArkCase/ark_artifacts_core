@@ -23,7 +23,7 @@ ARG BASE_IMG="${PUBLIC_REGISTRY}/${BASE_REPO}:${BASE_VER}"
 #
 # The repo from which to pull everything
 #
-ARG ARKCASE_MVN_REPO="https://project.armedia.com/nexus/repository/arkcase/"
+ARG ARKCASE_MVN_REPO="https://nexus.armedia.com/repository/arkcase/"
 
 #
 # ArkCase WAR and CONF files
