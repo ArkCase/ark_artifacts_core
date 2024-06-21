@@ -10,14 +10,14 @@
 # Basic Definitions
 #
 ARG EXT="core"
-ARG VER="2023.02.03"
+ARG VER="2023.02.04-TEST-01"
 
 #
 # Basic Parameters
 #
 ARG PUBLIC_REGISTRY="public.ecr.aws"
 ARG BASE_REPO="arkcase/artifacts"
-ARG BASE_VER="1.4.2"
+ARG BASE_VER="1.5.0"
 ARG BASE_IMG="${PUBLIC_REGISTRY}/${BASE_REPO}:${BASE_VER}"
 
 #
@@ -29,9 +29,7 @@ ARG ARKCASE_MVN_REPO="https://nexus.armedia.com/repository/arkcase/"
 # ArkCase WAR and CONF files
 #
 ARG ARKCASE_SRC="com.armedia.acm.acm-standard-applications:arkcase:${VER}:war"
-
-ARG CONF_VER="${VER}"
-ARG CONF_SRC="com.armedia.arkcase:arkcase-config-${EXT}:${CONF_VER}:zip"
+ARG CONF_SRC="com.armedia.arkcase:arkcase-config-${EXT}:${VER}:zip"
 
 #
 # The PDFNet library and binaries
@@ -39,6 +37,9 @@ ARG CONF_SRC="com.armedia.arkcase:arkcase-config-${EXT}:${CONF_VER}:zip"
 ARG PDFTRON_VER="9.3.0"
 ARG PDFTRON_SRC="com.armedia.arkcase:arkcase-pdftron-bin:${PDFTRON_VER}:jar"
 
+#
+# Now build the actual container
+#
 FROM "${BASE_IMG}"
 
 ARG VER
@@ -47,37 +48,10 @@ ENV VER="${VER}"
 #
 # Basic Parameters
 #
-
 LABEL ORG="ArkCase LLC" \
       MAINTAINER="Armedia Devops Team <devops@armedia.com>" \
-      APP="ArkCase Deployer" \
+      APP="ArkCase Deployer / Core" \
       VERSION="${VER}"
-
-ENV ARKCASE_DIR="${FILE_DIR}/arkcase"
-ENV ARKCASE_CONF_DIR="${ARKCASE_DIR}/conf"
-ENV ARKCASE_EXTS_DIR="${ARKCASE_DIR}/exts"
-ENV ARKCASE_WARS_DIR="${ARKCASE_DIR}/wars"
-
-ENV PENTAHO_DIR="${FILE_DIR}/pentaho"
-ENV PENTAHO_ANALYTICAL_DIR="${PENTAHO_DIR}/analytical"
-ENV PENTAHO_REPORTS_DIR="${PENTAHO_DIR}/reports"
-
-#
-# Make sure the base tree is created properly
-#
-RUN for n in \
-        "${ARKCASE_DIR}" \
-        "${ARKCASE_CONF_DIR}" \
-        "${ARKCASE_WARS_DIR}" \
-        "${ARKCASE_EXTS_DIR}" \
-        "${PENTAHO_DIR}" \
-        "${PENTAHO_ANALYTICAL_DIR}" \
-        "${PENTAHO_REPORTS_DIR}" \
-    ; do mkdir -p "${n}" ; done
-
-#
-# TODO: Eventually add the Solr and Alfresco trees in here
-#
 
 #
 # Maven auth details
