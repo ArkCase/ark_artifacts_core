@@ -29,6 +29,7 @@ ARG ARKCASE_MVN_REPO="https://nexus.armedia.com/repository/arkcase/"
 # ArkCase WAR and CONF files
 #
 ARG ARKCASE_SRC="com.armedia.acm.acm-standard-applications:arkcase:${VER}:war"
+ARG ARKCASE_ROOT_SRC="com.armedia.acm.acm-standard-applications:arkcase-tomcat-redirect:${VER}:war"
 ARG CONF_SRC="com.armedia.arkcase:arkcase-config-${EXT}:${VER}:zip"
 
 #
@@ -73,12 +74,17 @@ ARG ARKCASE_MVN_REPO
 # such that they can leverage layer caching as much as possible
 #
 
-# First PDFTron, since this is the artifact least likely to change
+# First, the ArkCase redirector, since it should NEVER change
+ARG ARKCASE_ROOT_SRC
+ENV ARKCASE_ROOT_TGT="${ARKCASE_WARS_DIR}/ROOT.war"
+RUN mvn-get "${ARKCASE_ROOT_SRC}" "${ARKCASE_MVN_REPO}" "${ARKCASE_ROOT_TGT}"
+
+# Next, PDFTron, since this is the artifact least likely to change
 ARG PDFTRON_SRC
 ENV PDFTRON_TGT="${ARKCASE_CONF_DIR}/00-pdftron.zip"
 RUN mvn-get "${PDFTRON_SRC}" "${ARKCASE_MVN_REPO}" "${PDFTRON_TGT}"
 
-# Then the ArkCase config, since that's the 2nd least likely to change
+# Then, the ArkCase config, since that's the 2nd least likely to change
 ARG CONF_SRC
 ENV CONF_TGT="${ARKCASE_CONF_DIR}/00-conf.zip"
 RUN mvn-get "${CONF_SRC}"    "${ARKCASE_MVN_REPO}" "${CONF_TGT}"
