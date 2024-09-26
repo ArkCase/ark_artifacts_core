@@ -10,7 +10,7 @@
 # Basic Definitions
 #
 ARG EXT="core"
-ARG VER="2023.02.04-RC-03"
+ARG VER="24.09.00"
 
 #
 # Basic Parameters
