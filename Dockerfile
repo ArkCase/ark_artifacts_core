@@ -10,7 +10,7 @@
 # Basic Definitions
 #
 ARG EXT="core"
-ARG VER="24.09.00"
+ARG VER="24.09.01"
 
 #
 # Basic Parameters
