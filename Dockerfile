@@ -42,6 +42,11 @@ ARG PDFTRON_VER="9.3.0"
 ARG PDFTRON_SRC="com.armedia.arkcase:arkcase-pdftron-bin:${PDFTRON_VER}:jar"
 
 #
+# The Reports binaries
+#
+ARG REPORTS_SRC="com.armedia.arkcase:arkcase-config-${EXT}:${VER}:zip:reports"
+
+#
 # Now build the actual container
 #
 FROM "${BASE_IMG}"
@@ -91,6 +96,10 @@ RUN mvn-get "${PDFTRON_SRC}" "${ARKCASE_MVN_REPO}" "${PDFTRON_TGT}"
 ARG CONF_SRC
 ENV CONF_TGT="${ARKCASE_CONF_DIR}/00-conf.zip"
 RUN mvn-get "${CONF_SRC}"    "${ARKCASE_MVN_REPO}" "${CONF_TGT}"
+
+# All types of Reports
+ARG REPORTS_SRC
+RUN mvn-get "${REPORTS_SRC}" "${ARKCASE_MVN_REPO}" "${PENTAHO_REPORTS_DIR}"
 
 # Finally, ArkCase, since it's the likeliest to change
 ARG ARKCASE_SRC
