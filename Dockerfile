@@ -29,28 +29,17 @@ ARG BASE_IMG="${BASE_REGISTRY}/${BASE_REPO}:${BASE_VER_PFX}${BASE_VER}"
 ARG ARKCASE_MVN_REPO="https://nexus.armedia.com/repository/arkcase/"
 
 #
-# ArkCase WAR and CONF files
+# The artifacts descriptor
 #
-ARG ARKCASE_SRC="com.armedia.acm.acm-standard-applications:arkcase:${VER}:war"
-ARG ARKCASE_ROOT_SRC="com.armedia.acm.acm-standard-applications:arkcase-tomcat-redirect:${VER}:war"
-ARG CONF_SRC="com.armedia.arkcase:arkcase-config-${EXT}:${VER}:zip"
-
-#
-# The PDFNet library and binaries
-#
-ARG PDFTRON_VER="9.3.0"
-ARG PDFTRON_SRC="com.armedia.arkcase:arkcase-pdftron-bin:${PDFTRON_VER}:jar"
-
-#
-# The Reports binaries
-#
-ARG REPORTS_SRC="com.armedia.arkcase:arkcase-config-${EXT}:${VER}:zip:reports"
+ARG ARTIFACTS_SRC="com.armedia.arkcase:arkcase-config-${EXT}:${VER}:yaml:artifacts"
 
 #
 # Now build the actual container
 #
 FROM "${BASE_IMG}"
 
+ARG EXT
+ENV EXT="${EXT}"
 ARG VER
 ENV VER="${VER}"
 
@@ -77,31 +66,7 @@ ARG ARKCASE_MVN_REPO
 #
 # Pull all the artifacts
 #
-# The artifacts are pulled in this specific order to facilitate
-# developers' lives when building the containers locally for testing,
-# such that they can leverage layer caching as much as possible
-#
-
-# First, the ArkCase redirector, since it should NEVER change
-ARG ARKCASE_ROOT_SRC
-ENV ARKCASE_ROOT_TGT="${ARKCASE_WARS_DIR}/ROOT.war"
-RUN mvn-get "${ARKCASE_ROOT_SRC}" "${ARKCASE_MVN_REPO}" "${ARKCASE_ROOT_TGT}"
-
-# Next, PDFTron, since this is the artifact least likely to change
-ARG PDFTRON_SRC
-ENV PDFTRON_TGT="${ARKCASE_CONF_DIR}/00-pdftron.zip"
-RUN mvn-get "${PDFTRON_SRC}" "${ARKCASE_MVN_REPO}" "${PDFTRON_TGT}"
-
-# Then, the ArkCase config, since that's the 2nd least likely to change
-ARG CONF_SRC
-ENV CONF_TGT="${ARKCASE_CONF_DIR}/00-conf.zip"
-RUN mvn-get "${CONF_SRC}"    "${ARKCASE_MVN_REPO}" "${CONF_TGT}"
-
-# All types of Reports
-ARG REPORTS_SRC
-RUN mvn-get "${REPORTS_SRC}" "${ARKCASE_MVN_REPO}" "${PENTAHO_REPORTS_DIR}"
-
-# Finally, ArkCase, since it's the likeliest to change
-ARG ARKCASE_SRC
-ENV ARKCASE_TGT="${ARKCASE_WARS_DIR}/arkcase.war"
-RUN mvn-get "${ARKCASE_SRC}" "${ARKCASE_MVN_REPO}" "${ARKCASE_TGT}"
+ARG ARTIFACTS_SRC
+ENV ARTIFACTS_TGT="${FILE_DIR}/artifacts.yaml"
+RUN mvn-get "${ARTIFACTS_SRC}" "${ARKCASE_MVN_REPO}" "${ARTIFACTS_TGT}" && \
+    download-artifacts "${ARTIFACTS_TGT}"
