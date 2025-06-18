@@ -2,7 +2,7 @@
 #
 # How to build:
 #
-# docker build -t arkcase/artifacts:latest .
+# docker build -t arkcase/artifacts-core:latest .
 #
 ###########################################################################################################
 
@@ -26,7 +26,7 @@ ARG BASE_IMG="${BASE_REGISTRY}/${BASE_REPO}:${BASE_VER_PFX}${BASE_VER}"
 #
 # The repo from which to pull everything
 #
-ARG ARKCASE_MVN_REPO="https://nexus.armedia.com/repository/arkcase/"
+ARG ARTIFACTS_MVN_REPO="https://nexus.armedia.com/repository/arkcase/"
 
 #
 # The artifacts descriptor
@@ -37,6 +37,9 @@ ARG ARTIFACTS_SRC="com.armedia.arkcase:arkcase-config-${EXT}:${VER}:yaml:artifac
 # Now build the actual container
 #
 FROM "${BASE_IMG}"
+
+ARG ARTIFACTS_MVN_REPO
+ARG ARTIFACTS_SRC
 
 ARG EXT
 ENV EXT="${EXT}"
@@ -59,14 +62,7 @@ ARG MVN_GET_USERNAME
 ARG MVN_GET_PASSWORD
 
 #
-# Import the repo
-#
-ARG ARKCASE_MVN_REPO
-
-#
 # Pull all the artifacts
 #
-ARG ARTIFACTS_SRC
-ENV ARTIFACTS_TGT="${FILE_DIR}/artifacts.yaml"
-RUN mvn-get "${ARTIFACTS_SRC}" "${ARKCASE_MVN_REPO}" "${ARTIFACTS_TGT}" && \
-    download-artifacts "${ARTIFACTS_TGT}"
+RUN mvn-get "${ARTIFACTS_SRC}" "${ARTIFACTS_MVN_REPO}" "${ARTIFACTS_MANIFEST}" && \
+    download-artifacts "${ARTIFACTS_MANIFEST}"
