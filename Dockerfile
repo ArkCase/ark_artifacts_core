@@ -58,6 +58,6 @@ LABEL ORG="ArkCase LLC" \
 # Pull all the artifacts
 #
 RUN --mount=type=secret,id=mvn_get_auth \
-    source /run/secrets/mvn_get_auth && \
+    . /run/secrets/mvn_get_auth && \
     mvn-get "${ARTIFACTS_SRC}" "${ARTIFACTS_MVN_REPO}" "${ARTIFACTS_MANIFEST}" && \
     download-artifacts "${ARTIFACTS_MANIFEST}"
