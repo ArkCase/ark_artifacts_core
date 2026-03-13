@@ -55,14 +55,9 @@ LABEL ORG="ArkCase LLC" \
       VERSION="${VER}"
 
 #
-# Maven auth details
-#
-ARG MVN_GET_ENCRYPTION_KEY
-ARG MVN_GET_USERNAME
-ARG MVN_GET_PASSWORD
-
-#
 # Pull all the artifacts
 #
-RUN mvn-get "${ARTIFACTS_SRC}" "${ARTIFACTS_MVN_REPO}" "${ARTIFACTS_MANIFEST}" && \
+RUN --mount=type=secret,id=mvn_get_auth \
+    source /run/secrets/mvn_get_auth && \
+    mvn-get "${ARTIFACTS_SRC}" "${ARTIFACTS_MVN_REPO}" "${ARTIFACTS_MANIFEST}" && \
     download-artifacts "${ARTIFACTS_MANIFEST}"
