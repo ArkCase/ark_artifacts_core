@@ -15,13 +15,14 @@ ARG VER="25.09.01"
 #
 # Basic Parameters
 #
+ARG FIPS=""
 ARG PUBLIC_REGISTRY="public.ecr.aws"
 
 ARG BASE_REGISTRY="${PUBLIC_REGISTRY}"
 ARG BASE_REPO="arkcase/artifacts"
 ARG BASE_VER="1.6.5"
 ARG BASE_VER_PFX=""
-ARG BASE_IMG="${BASE_REGISTRY}/${BASE_REPO}:${BASE_VER_PFX}${BASE_VER}"
+ARG BASE_IMG="${BASE_REGISTRY}/${BASE_REPO}${FIPS}:${BASE_VER_PFX}${BASE_VER}"
 
 #
 # The repo from which to pull everything
