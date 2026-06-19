@@ -1,3 +1,5 @@
 **/.sw?
 **/.*.sw?
-test
+
+**/compliance*
+**/vulnerabilities*
